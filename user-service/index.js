@@ -1,4 +1,9 @@
 const express = require('express');
+const client = require('prom-client');
+
+// Initialize metrics collection
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics({ register: client.register });
 
 const app = express();
 const PORT = 3001;
@@ -28,6 +33,12 @@ app.get('/users/:id', (req, res) => {
         return res.status(404).json({ message: 'User not found' });
     }
     res.json(user);
+});
+
+// Expose metrics for Prometheus
+app.get('/metrics', async (req, res) => {
+    res.setHeader('Content-Type', client.register.contentType);
+    res.send(await client.register.metrics());
 });
 
 app.listen(PORT, () => {

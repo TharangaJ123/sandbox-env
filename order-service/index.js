@@ -1,5 +1,10 @@
 const express = require('express');
 const axios = require('axios');
+const client = require('prom-client');
+
+// Initialize metrics collection
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics({ register: client.register });
 
 const app = express();
 const PORT = 3002;
@@ -22,6 +27,15 @@ app.get('/', (req, res) => {
 // Get all orders
 app.get('/orders', (req, res) => {
     res.json(orders);
+});
+
+// Get order by ID
+app.get('/orders/:id', (req, res) => {
+    const order = orders.find(o => o.id === parseInt(req.params.id));
+    if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+    }
+    res.json(order);
 });
 
 // Create an order
@@ -62,6 +76,12 @@ app.post('/orders', async (req, res) => {
         console.error('Error communicating with User Service:', error.message);
         res.status(500).json({ message: 'Internal Server Error' });
     }
+});
+
+// Expose metrics for Prometheus
+app.get('/metrics', async (req, res) => {
+    res.setHeader('Content-Type', client.register.contentType);
+    res.send(await client.register.metrics());
 });
 
 app.listen(PORT, () => {
