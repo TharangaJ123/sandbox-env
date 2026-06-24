@@ -45,7 +45,7 @@ async function evaluateMaturity() {
             console.error("-------------------------------\n");
         }
 
-        // 3. Automated Test Coverage (this should be mock because test framesworks are not integrated yet)
+        // 3. Automated Test Coverage (This should be mock because test framesworks are not integrated yet)
         const testCoverage = Math.floor(Math.random() * (95 - 60 + 1)) + 60; // 60% - 95% athara random agayak
 
         console.log("📊 [REAL-TIME DATA COLLECTED]");
