@@ -35,7 +35,7 @@ async function evaluateMaturity() {
             
             const latestRun = githubResponse.data.workflow_runs[0];
             if (latestRun) {
-                // Returns 'success', 'failure', etc.
+                // Returns 'success', 'failure' or etc.
                 buildStatus = latestRun.conclusion ? latestRun.conclusion.toUpperCase() : latestRun.status.toUpperCase();
             }
         } catch (ghError) {
