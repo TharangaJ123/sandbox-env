@@ -39,7 +39,10 @@ async function evaluateMaturity() {
                 buildStatus = latestRun.conclusion ? latestRun.conclusion.toUpperCase() : latestRun.status.toUpperCase();
             }
         } catch (ghError) {
-            console.error("⚠️ GitHub API Error:", ghError.response ? ghError.response.data.message : ghError.message);
+            console.error("\n⚠️ --- GITHUB API DEBUG INFO ---");
+            console.error("Status Code :", ghError.response ? ghError.response.status : "No Response");
+            console.error("Error Msg   :", ghError.response ? ghError.response.data.message : ghError.message);
+            console.error("-------------------------------\n");
         }
 
         // 3. Automated Test Coverage (this should be mock because test framesworks are not integrated yet)
