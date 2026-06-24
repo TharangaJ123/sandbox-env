@@ -1,0 +1,47 @@
+name: PoC Microservices CI Pipeline
+
+# this will trigger on when we push the code to main/master branch or when we create a pull request to main/master branch
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  # 1. User Service building job
+  build-user-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        working-directory: ./user-service
+        run: npm install
+
+      - name: Build Docker Image
+        run: docker build -t dummy-user-service:latest ./user-service
+
+  # 2. Order Service building job (Run Parallel)
+  build-order-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        working-directory: ./order-service
+        run: npm install
+
+      - name: Build Docker Image
+        run: docker build -t dummy-order-service:latest ./order-service
